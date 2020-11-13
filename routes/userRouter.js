@@ -534,17 +534,13 @@ router.post("/shiftTimetableDay", async(req,res) => {
         arr.push(docs[0].timetable[i].day);
     }
     var d = new Date();
-    var str = d.toString().split(" ");
-    var s = str[0]+str[1]+str[2];
-
     var d2 = new Date(d.getFullYear(),d.getMonth(),d.getDate()+Number(days));
-    var str1 = d2.toString().split(" ");
-    var s1 = str1[0]+str1[1]+str1[2];
+    
 
     for(i=0;i<docs.length;i++)
     {
-        docs[i].leaveStart_day = s;
-        docs[i].leaveFinal_day = s1;
+        docs[i].leaveStart_day = d;
+        docs[i].leaveFinal_day = d2;
         docs[i].timetable = (docs[i].timetable.slice(docs[i].timetable.length - Number(days), docs[i].timetable.length)).concat(docs[i].timetable.slice(0, docs[i].timetable.length - Number(days)));
         for(j=0;j<docs[i].timetable.length;j++)
         {
