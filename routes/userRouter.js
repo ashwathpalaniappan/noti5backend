@@ -521,9 +521,9 @@ router.post("/studentTimetable", async(req,res) => {
     }
 });
 
-router.post("/shiftTimetable", async(req,res) => {
+router.post("/shiftTimetableDay", async(req,res) => {
     try{
-    const {department,days,leaveStart_day,leaveFinal_day} = req.body
+    const {department,days} = req.body
     var docs = await Timetable.find({department:department});
     var docs2 = docs;
     if(!docs)
@@ -533,15 +533,47 @@ router.post("/shiftTimetable", async(req,res) => {
     {
         arr.push(docs[0].timetable[i].day);
     }
+    var d = new Date();
+    var str = d.toString().split(" ");
+    var s = str[0]+str[1]+str[2];
+
+    var d2 = new Date(d.getFullYear(),d.getMonth(),d.getDate()+Number(days));
+    var str1 = d2.toString().split(" ");
+    var s1 = str1[0]+str1[1]+str1[2];
+
     for(i=0;i<docs.length;i++)
     {
-        docs[i].leaveStart_day = leaveStart_day;
-        docs[i].leaveFinal_day = leaveFinal_day
-        docs[i].timetable = (docs[i].timetable.slice(Number(days), docs[i].timetable.length)).concat(docs[i].timetable.slice(0, Number(days)));
+        docs[i].leaveStart_day = s;
+        docs[i].leaveFinal_day = s1;
+        docs[i].timetable = (docs[i].timetable.slice(docs[i].timetable.length - Number(days), docs[i].timetable.length)).concat(docs[i].timetable.slice(0, docs[i].timetable.length - Number(days)));
         for(j=0;j<docs[i].timetable.length;j++)
         {
                 docs2[i].timetable[j].day = arr[j];
         }
+        await docs[i].save();
+    }
+    res.json({tb:docs});
+
+    } catch (err){
+        res.status(500).json({error:err.message});
+    }
+});
+
+router.post("/shiftTimetableDate", async(req,res) => {
+    try{
+    const {department,leaveStart_day,leaveFinal_day} = req.body;
+    var docs = await Timetable.find({department:department});
+    if(!docs)
+    return res.status(400).json({msg: "You don't have any timetable"});
+    var i,arr=[];
+    for(i=0;i<docs[0].timetable.length;i++)
+    {
+        arr.push(docs[0].timetable[i].day);
+    }
+    for(i=0;i<docs.length;i++)
+    {
+        docs[i].leaveStart_day = leaveStart_day;
+        docs[i].leaveFinal_day = leaveFinal_day;
         await docs[i].save();
     }
     res.json({tb:docs});
