@@ -145,7 +145,7 @@ router.post("/retSubjects",async(req,res)=>
                     staff.push(ans[i].slot2);
                     for(j=0;j<admin.staff.length;j++)
                     {
-                        if(ans[i].slot1===admin.staff[j].email && !staff2.includes(admin.staff[j].name))
+                        if(ans[i].slot2===admin.staff[j].email && !staff2.includes(admin.staff[j].name))
                         staff2.push(admin.staff[j].name);
                     }
                 }
