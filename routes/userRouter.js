@@ -5,6 +5,7 @@ const Admin = require("../models/userModel");
 const Staff = require("../models/staffModel");
 const Timetable = require("../models/TimetableModel");
 const SuperAdmin = require("../models/superAdminModel");
+const Student = require("../models/studentModel");
 
 
 router.post("/adminSignup", async(req,res) => {
@@ -133,20 +134,21 @@ router.post("/retSubjects",async(req,res)=>
               ans2.push(x);
               if(slot==="slot1")
                 {
-                    staff.push(ans[i].slot1);
                     for(j=0;j<admin.staff.length;j++)
                     {
                         if(ans[i].slot1===admin.staff[j].email && !staff2.includes(admin.staff[j].name))
-                        staff2.push(admin.staff[j].name);
+                       { staff.push(ans[i].slot1);
+                        staff2.push(admin.staff[j].name);}
                     }
                 }
               else if(slot==="slot2")
                 {
-                    staff.push(ans[i].slot2);
+                    
                     for(j=0;j<admin.staff.length;j++)
                     {
                         if(ans[i].slot2===admin.staff[j].email && !staff2.includes(admin.staff[j].name))
-                        staff2.push(admin.staff[j].name);
+                        {   staff.push(ans[i].slot2);
+                            staff2.push(admin.staff[j].name);}
                     }
                 }
           }
@@ -510,10 +512,20 @@ router.post("/addInfo", async(req,res) => {
 
 router.post("/studentTimetable", async(req,res) => {
     try{
-    const {department, year, slot} = req.body
+    const {email, department, year, slot} = req.body
     var docs = await Timetable.findOne({department:department,year:year,slot:slot});
     if(!docs)
     return res.status(400).json({msg: "Your admin has not uploaded any timetable! Please DM them!"});
+    
+    var docs2 = await Student.findOne({email:email});
+    if(!docs2)
+    {
+    const newStudent = new Student({
+        email:email
+    });
+    await newStudent.save();
+    }
+
     res.json(docs);
 
     } catch (err){
