@@ -11,9 +11,9 @@ const Hello = (name,id) => {
              <body style="margin: 0; padding: 0;">
                 <br />
                 <br />
-                <div><p><b>Hi ${name}</b><br/>
-                You have signed in into noti5 app for the first time.<br/>
-                To verify your mail enter the id <br/> <b> ${id} </b> <br/> in the app.
+                <div><p><b>Hi ${name},</b><br/>
+                Welcome to the <b>noti5 app<b>.<br/>
+                To verify your e-mail id, enter the OTP <br/><br/> <b> ${id} </b> <br/><br/> in the app.
                 </p></div>
                 <br />
                 <br />
